@@ -1,0 +1,354 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema prueba
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema prueba
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `prueba` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `prueba` ;
+
+-- -----------------------------------------------------
+-- Table `prueba`.`almacen`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `prueba`.`almacen` (
+  `idAlmacen` INT NOT NULL,
+  `Almacen` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`idAlmacen`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `prueba`.`categoria`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `prueba`.`categoria` (
+  `idCategoria` INT NOT NULL,
+  `Categoria` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`idCategoria`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `prueba`.`cliente`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `prueba`.`cliente` (
+  `idCliente` INT NOT NULL,
+  `Nombre` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`idCliente`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `prueba`.`proveedor`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `prueba`.`proveedor` (
+  `idProveedor` INT NOT NULL,
+  `Proveedor` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`idProveedor`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `prueba`.`documento`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `prueba`.`documento` (
+  `idDocumento` INT NOT NULL,
+  `Documento` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`idDocumento`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `prueba`.`moneda`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `prueba`.`moneda` (
+  `idMoneda` INT NOT NULL,
+  `Moneda` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`idMoneda`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `prueba`.`usuario`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `prueba`.`usuario` (
+  `idUsuario` INT NOT NULL,
+  `Usuario` VARCHAR(45) NULL DEFAULT NULL,
+  PRIMARY KEY (`idUsuario`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `prueba`.`compra`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `prueba`.`compra` (
+  `idCompra` INT NOT NULL,
+  `Compra` VARCHAR(45) NULL DEFAULT NULL,
+  `proveedor_idProveedor` INT NOT NULL,
+  `documento_idDocumento` INT NOT NULL,
+  `almacen_idAlmacen` INT NOT NULL,
+  `moneda_idMoneda` INT NOT NULL,
+  `usuario_idUsuario` INT NOT NULL,
+  PRIMARY KEY (`idCompra`, `proveedor_idProveedor`, `documento_idDocumento`, `almacen_idAlmacen`, `moneda_idMoneda`, `usuario_idUsuario`),
+  INDEX `fk_compra_proveedor1_idx` (`proveedor_idProveedor` ASC) VISIBLE,
+  INDEX `fk_compra_documento1_idx` (`documento_idDocumento` ASC) VISIBLE,
+  INDEX `fk_compra_almacen1_idx` (`almacen_idAlmacen` ASC) VISIBLE,
+  INDEX `fk_compra_moneda1_idx` (`moneda_idMoneda` ASC) VISIBLE,
+  INDEX `fk_compra_usuario1_idx` (`usuario_idUsuario` ASC) VISIBLE,
+  CONSTRAINT `fk_compra_proveedor1`
+    FOREIGN KEY (`proveedor_idProveedor`)
+    REFERENCES `prueba`.`proveedor` (`idProveedor`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_compra_documento1`
+    FOREIGN KEY (`documento_idDocumento`)
+    REFERENCES `prueba`.`documento` (`idDocumento`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_compra_almacen1`
+    FOREIGN KEY (`almacen_idAlmacen`)
+    REFERENCES `prueba`.`almacen` (`idAlmacen`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_compra_moneda1`
+    FOREIGN KEY (`moneda_idMoneda`)
+    REFERENCES `prueba`.`moneda` (`idMoneda`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_compra_usuario1`
+    FOREIGN KEY (`usuario_idUsuario`)
+    REFERENCES `prueba`.`usuario` (`idUsuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `prueba`.`familia`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `prueba`.`familia` (
+  `idFamilia` INT NOT NULL,
+  `Familia` VARCHAR(45) NULL DEFAULT NULL,
+  `categoria_idCategoria` INT NOT NULL,
+  PRIMARY KEY (`idFamilia`, `categoria_idCategoria`),
+  INDEX `fk_familia_categoria_idx` (`categoria_idCategoria` ASC) VISIBLE,
+  CONSTRAINT `fk_familia_categoria`
+    FOREIGN KEY (`categoria_idCategoria`)
+    REFERENCES `prueba`.`categoria` (`idCategoria`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `prueba`.`producto`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `prueba`.`producto` (
+  `idProducto` INT NOT NULL,
+  `Producto` VARCHAR(45) NULL DEFAULT NULL,
+  `familia_idFamilia` INT NOT NULL,
+  `familia_categoria_idCategoria` INT NOT NULL,
+  `proveedor_idProveedor` INT NOT NULL,
+  PRIMARY KEY (`idProducto`, `familia_idFamilia`, `familia_categoria_idCategoria`, `proveedor_idProveedor`),
+  INDEX `fk_producto_familia1_idx` (`familia_idFamilia` ASC, `familia_categoria_idCategoria` ASC) VISIBLE,
+  INDEX `fk_producto_proveedor1_idx` (`proveedor_idProveedor` ASC) VISIBLE,
+  CONSTRAINT `fk_producto_familia1`
+    FOREIGN KEY (`familia_idFamilia` , `familia_categoria_idCategoria`)
+    REFERENCES `prueba`.`familia` (`idFamilia` , `categoria_idCategoria`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_producto_proveedor1`
+    FOREIGN KEY (`proveedor_idProveedor`)
+    REFERENCES `prueba`.`proveedor` (`idProveedor`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `prueba`.`detalle_compra`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `prueba`.`detalle_compra` (
+  `idDetalle_Compra` INT NOT NULL,
+  `Detalle_Compra` VARCHAR(45) NULL DEFAULT NULL,
+  `producto_idProducto` INT NOT NULL,
+  `producto_familia_idFamilia` INT NOT NULL,
+  `producto_familia_categoria_idCategoria` INT NOT NULL,
+  `producto_proveedor_idProveedor` INT NOT NULL,
+  `compra_idCompra` INT NOT NULL,
+  `compra_proveedor_idProveedor` INT NOT NULL,
+  `compra_documento_idDocumento` INT NOT NULL,
+  `compra_almacen_idAlmacen` INT NOT NULL,
+  `compra_moneda_idMoneda` INT NOT NULL,
+  `compra_usuario_idUsuario` INT NOT NULL,
+  PRIMARY KEY (`idDetalle_Compra`, `producto_idProducto`, `producto_familia_idFamilia`, `producto_familia_categoria_idCategoria`, `producto_proveedor_idProveedor`, `compra_idCompra`, `compra_proveedor_idProveedor`, `compra_documento_idDocumento`, `compra_almacen_idAlmacen`, `compra_moneda_idMoneda`, `compra_usuario_idUsuario`),
+  INDEX `fk_detalle_compra_producto1_idx` (`producto_idProducto` ASC, `producto_familia_idFamilia` ASC, `producto_familia_categoria_idCategoria` ASC, `producto_proveedor_idProveedor` ASC) VISIBLE,
+  INDEX `fk_detalle_compra_compra1_idx` (`compra_idCompra` ASC, `compra_proveedor_idProveedor` ASC, `compra_documento_idDocumento` ASC, `compra_almacen_idAlmacen` ASC, `compra_moneda_idMoneda` ASC, `compra_usuario_idUsuario` ASC) VISIBLE,
+  CONSTRAINT `fk_detalle_compra_producto1`
+    FOREIGN KEY (`producto_idProducto` , `producto_familia_idFamilia` , `producto_familia_categoria_idCategoria` , `producto_proveedor_idProveedor`)
+    REFERENCES `prueba`.`producto` (`idProducto` , `familia_idFamilia` , `familia_categoria_idCategoria` , `proveedor_idProveedor`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_detalle_compra_compra1`
+    FOREIGN KEY (`compra_idCompra` , `compra_proveedor_idProveedor` , `compra_documento_idDocumento` , `compra_almacen_idAlmacen` , `compra_moneda_idMoneda` , `compra_usuario_idUsuario`)
+    REFERENCES `prueba`.`compra` (`idCompra` , `proveedor_idProveedor` , `documento_idDocumento` , `almacen_idAlmacen` , `moneda_idMoneda` , `usuario_idUsuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `prueba`.`venta`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `prueba`.`venta` (
+  `idVenta` INT NOT NULL,
+  `Venta` VARCHAR(45) NULL DEFAULT NULL,
+  `documento_idDocumento` INT NOT NULL,
+  `moneda_idMoneda` INT NOT NULL,
+  `cliente_idCliente` INT NOT NULL,
+  `usuario_idUsuario` INT NOT NULL,
+  PRIMARY KEY (`idVenta`, `documento_idDocumento`, `moneda_idMoneda`, `cliente_idCliente`, `usuario_idUsuario`),
+  INDEX `fk_venta_documento1_idx` (`documento_idDocumento` ASC) VISIBLE,
+  INDEX `fk_venta_moneda1_idx` (`moneda_idMoneda` ASC) VISIBLE,
+  INDEX `fk_venta_cliente1_idx` (`cliente_idCliente` ASC) VISIBLE,
+  INDEX `fk_venta_usuario1_idx` (`usuario_idUsuario` ASC) VISIBLE,
+  CONSTRAINT `fk_venta_documento1`
+    FOREIGN KEY (`documento_idDocumento`)
+    REFERENCES `prueba`.`documento` (`idDocumento`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_venta_moneda1`
+    FOREIGN KEY (`moneda_idMoneda`)
+    REFERENCES `prueba`.`moneda` (`idMoneda`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_venta_cliente1`
+    FOREIGN KEY (`cliente_idCliente`)
+    REFERENCES `prueba`.`cliente` (`idCliente`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_venta_usuario1`
+    FOREIGN KEY (`usuario_idUsuario`)
+    REFERENCES `prueba`.`usuario` (`idUsuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `prueba`.`detalle_venta`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `prueba`.`detalle_venta` (
+  `idDetalle_Venta` INT NOT NULL,
+  `Detalle_Venta` VARCHAR(45) NULL DEFAULT NULL,
+  `producto_idProducto` INT NOT NULL,
+  `producto_familia_idFamilia` INT NOT NULL,
+  `producto_familia_categoria_idCategoria` INT NOT NULL,
+  `producto_proveedor_idProveedor` INT NOT NULL,
+  `venta_idVenta` INT NOT NULL,
+  `venta_documento_idDocumento` INT NOT NULL,
+  `venta_moneda_idMoneda` INT NOT NULL,
+  `venta_cliente_idCliente` INT NOT NULL,
+  `venta_usuario_idUsuario` INT NOT NULL,
+  PRIMARY KEY (`idDetalle_Venta`, `producto_idProducto`, `producto_familia_idFamilia`, `producto_familia_categoria_idCategoria`, `producto_proveedor_idProveedor`, `venta_idVenta`, `venta_documento_idDocumento`, `venta_moneda_idMoneda`, `venta_cliente_idCliente`, `venta_usuario_idUsuario`),
+  INDEX `fk_detalle_venta_producto1_idx` (`producto_idProducto` ASC, `producto_familia_idFamilia` ASC, `producto_familia_categoria_idCategoria` ASC, `producto_proveedor_idProveedor` ASC) VISIBLE,
+  INDEX `fk_detalle_venta_venta1_idx` (`venta_idVenta` ASC, `venta_documento_idDocumento` ASC, `venta_moneda_idMoneda` ASC, `venta_cliente_idCliente` ASC, `venta_usuario_idUsuario` ASC) VISIBLE,
+  CONSTRAINT `fk_detalle_venta_producto1`
+    FOREIGN KEY (`producto_idProducto` , `producto_familia_idFamilia` , `producto_familia_categoria_idCategoria` , `producto_proveedor_idProveedor`)
+    REFERENCES `prueba`.`producto` (`idProducto` , `familia_idFamilia` , `familia_categoria_idCategoria` , `proveedor_idProveedor`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_detalle_venta_venta1`
+    FOREIGN KEY (`venta_idVenta` , `venta_documento_idDocumento` , `venta_moneda_idMoneda` , `venta_cliente_idCliente` , `venta_usuario_idUsuario`)
+    REFERENCES `prueba`.`venta` (`idVenta` , `documento_idDocumento` , `moneda_idMoneda` , `cliente_idCliente` , `usuario_idUsuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `prueba`.`rol`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `prueba`.`rol` (
+  `idRol` INT NOT NULL,
+  `Rol` VARCHAR(45) NULL DEFAULT NULL,
+  `usuario_idUsuario` INT NOT NULL,
+  PRIMARY KEY (`idRol`, `usuario_idUsuario`),
+  INDEX `fk_rol_usuario1_idx` (`usuario_idUsuario` ASC) VISIBLE,
+  CONSTRAINT `fk_rol_usuario1`
+    FOREIGN KEY (`usuario_idUsuario`)
+    REFERENCES `prueba`.`usuario` (`idUsuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `prueba`.`privilegio`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `prueba`.`privilegio` (
+  `idPrivilegio` INT NOT NULL,
+  `Privilegio` VARCHAR(45) NULL DEFAULT NULL,
+  `rol_idRol` INT NOT NULL,
+  `rol_usuario_idUsuario` INT NOT NULL,
+  PRIMARY KEY (`idPrivilegio`, `rol_idRol`, `rol_usuario_idUsuario`),
+  INDEX `fk_privilegio_rol1_idx` (`rol_idRol` ASC, `rol_usuario_idUsuario` ASC) VISIBLE,
+  CONSTRAINT `fk_privilegio_rol1`
+    FOREIGN KEY (`rol_idRol` , `rol_usuario_idUsuario`)
+    REFERENCES `prueba`.`rol` (`idRol` , `usuario_idUsuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+USE `prueba`;
+
+DELIMITER $$
+USE `prueba`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `prueba`.`compra_BEFORE_INSERT` BEFORE INSERT ON `compra` FOR EACH ROW
+BEGIN
+
+END
+$$
+
+
+DELIMITER ;
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
